@@ -1,0 +1,53 @@
+services:
+  nagix-plan:
+    image: nagix-plan:latest
+    container_name: nagix-plan
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:3000
+    environment:
+      - DATABASE_URL=postgresql://root:root@nagix-plan-postgres:5432/nagix-plan
+      - DIRECT_URL=postgresql://root:root@nagix-plan-postgres:5432/nagix-plan
+      - NEXTAUTH_URL=http://localhost:8080
+      - NEXTAUTH_SECRET=your_nextauth_secret
+    depends_on:
+      - db
+    networks:
+      - nagix-plan-network
+    restart: always
+
+  db:
+    image: postgres
+    container_name: nagix-plan-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: nagix-plan
+    ports:
+      - 5432:5432
+    volumes:
+      - nagix-plan-postgres-data:/var/lib/postgresql/data
+    networks:
+      - nagix-plan-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: nagix-plan-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@nagixplan.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - 5050:80
+    networks:
+      - nagix-plan-network
+
+volumes:
+  nagix-plan-postgres-data:
+
+networks:
+  nagix-plan-network:
+    driver: bridge

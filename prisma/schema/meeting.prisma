@@ -1,0 +1,51 @@
+model Meeting {
+  id             String               @id @default(cuid())
+  title          String
+  description    String?
+  meetingType    MeetingType          @default(INPERSON)
+  location       String?
+  note           String?
+  dateType       DateType             @default(WEEKLY)
+  proposedDates  DateTime[]
+  finalDate      DateTime?
+  status         MeetingStatus        @default(PUBLISHED)
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  endTime        String
+  startTime      String
+  availableSlots AvailableSlot[]
+  participants   MeetingParticipant[]
+}
+
+model MeetingParticipant {
+  id             String          @id @default(cuid())
+  role           ParticipantRole
+  responseStatus ResponseStatus  @default(PENDING)
+  userId         String
+  meetingId      String
+  meeting        Meeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user           User            @relation(fields: [userId], references: [id])
+
+  @@unique([userId, meetingId])
+  @@index([userId])
+  @@index([meetingId])
+}
+
+model AvailableSlot {
+  id        String     @id @default(cuid())
+  meetingId String
+  userId    String
+  date      DateTime
+  startTime String
+  endTime   String
+  status    SlotStatus @default(UNAVAILABLE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  timeZone  String?
+  meeting   Meeting    @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([meetingId])
+  @@index([userId])
+  @@index([date])
+}

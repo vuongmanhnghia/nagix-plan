@@ -1,0 +1,38 @@
+enum UserType {
+  GOOGLE_USER
+  GUEST
+}
+
+enum MeetingType {
+  ONLINE
+  INPERSON
+}
+
+enum DateType {
+  WEEKLY
+  ANY
+}
+
+enum ParticipantRole {
+  OWNER
+  PARTICIPANT
+}
+
+enum ResponseStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+enum MeetingStatus {
+  PUBLISHED
+  SCHEDULED
+  CANCELLED
+  COMPLETED
+}
+
+enum SlotStatus {
+  AVAILABLE
+  UNAVAILABLE
+  IFNEEDED
+}
